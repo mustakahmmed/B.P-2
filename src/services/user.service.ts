@@ -3,28 +3,26 @@ import { env } from "@/env";
 import { cookies } from "next/headers"
 const AUTH_URL = env.AUTH_URL
 
-export const useServices = {
-    getSession:async function (){
+export const userService ={
+    getSeesion: async function () {
         try {
             const cookieStore = await cookies()
-            console.log(cookieStore);
-
-            const res = await fetch(`${AUTH_URL}/get-session`,{
-                headers:{
-                    cookie:cookieStore.toString()
-                },
-                cache:"no-store"
-            })
-
-            const session = await res.json()
-            return {data: session,error:null}
-            
+        const res = await fetch(`${AUTH_URL}/get-session`,{
+            headers:{
+                Cookie: cookieStore.toString()
+            }
+        })
+        const seesion =await res.json()
+        console.log(seesion);
+        if (seesion.data === null) {
+            return {data:null,error:{message:"Session is missing"}}
+        }
+        
+        return {data:seesion,err:null}
         } catch (error) {
-            console.error(error);
-            return {data:null, error:{message:"somthing went wrong"}}
+            console.log(error);
+            return {data:null,error:{message:"somthing went wrong"}}
             
         }
-
     }
 }
-

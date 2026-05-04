@@ -1,4 +1,7 @@
+"use client"
+
 import * as React from "react"
+import { usePathname } from "next/navigation"
 
 import {
   Sidebar,
@@ -11,40 +14,42 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
+import { adminRoutes } from "@/routes/adminRoutes"
+import { userRoutes } from "@/routes/userRoutes"
+import { Route } from "@/types"
 
-// This is sample data.
-const data = {
-  navMain: [
-    {
-      title: "Getting Started",
-      items: [
-        {
-          title: "Analytics",
-          url: "/dashboard/analytics",
-        },
-        {
-          title: "Write Blog",
-          url: "/dashboard/write-blog",
-        },
-      ],
-    },
-  ],
-}
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({user, ...props }:{user:{role:string} & React.ComponentProps<typeof Sidebar>}) {
+  const pathname = usePathname()
+  
+  let route:Route[] = [];
+  switch (user.role) {
+    case "user":
+      route = userRoutes
+      break;
+
+    case "admin":
+      route = adminRoutes
+      break;
+  
+    default:
+      route =[]
+      break;
+  }
   return (
     <Sidebar {...props}>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
+        {route.map((item) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
-                      <a href={item.url}>{item.title}</a>
+                    <SidebarMenuButton asChild isActive={pathname === item.url}>
+                      <Link href={item.url}>{item.title}</Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

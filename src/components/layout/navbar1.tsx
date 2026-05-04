@@ -70,6 +70,10 @@ const Navbar1 = ({
       url: "home" 
     },
     {
+      title: "Blogs",
+      url: "/blogs",
+    },
+    {
       title: "About us",
       url: "/aboutus",
     },
