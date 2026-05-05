@@ -13,18 +13,23 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { Roles } from "@/constent/role"
+import { userService } from "@/services/user.service"
 import { ReactNode } from "react"
 
 
-export default function Sidebar({
+export default async function Sidebar({
     admin,
     user}:{
     admin:ReactNode;
     user:ReactNode}) {
 
-   const userInfo = {
-    role:"admin"
-   }
+    const {data} = await userService.getSeesion()
+    const userInfo = data.user
+
+
+  
+   
 
   return (
     <SidebarProvider>
@@ -49,7 +54,7 @@ export default function Sidebar({
           </Breadcrumb>
         </header>
         <div className="flex gap-4 p-4">
-        {userInfo.role === "user"? user : admin}
+        {userInfo.role === Roles.user? user : admin}
         </div>
       </SidebarInset>
     </SidebarProvider>
