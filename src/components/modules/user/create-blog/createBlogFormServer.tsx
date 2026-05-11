@@ -4,6 +4,7 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { env } from '@/env'
+import { revalidateTag } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
@@ -37,8 +38,13 @@ export default function CreateBlogFormServer() {
     if (res.status) {
         redirect("/blogs?success")
     }
+    // delete old cach and update new cach on every successful request
+    if (res.ok) {
+        revalidateTag("blogPost","max")
+    }
     
    }
+   
   return (
    
         <Card className='max-w-2xl mx-auto'>
